@@ -5,7 +5,7 @@ import {ToDoItem} from '../../models';
 
 interface IProps {
   todo: ToDoItem;
-  deleteItem: () => void;
+  deleteItem: (id: number) => Promise<void>;
 }
 
 const ToDoItemComponent = ({todo: {id, value}, deleteItem}: IProps) => {
