@@ -34,9 +34,9 @@ const App = () => {
       ];
       const db = await getDBConnection();
       await createTable(db);
-      const storedTodoIttems = await getTodoItems(db);
-      if (storedTodoIttems.length) {
-        setTodos(storedTodoIttems);
+      const storedTodoItems = await getTodoItems(db);
+      if (storedTodoItems.length) {
+        setTodos(storedTodoItems);
       } else {
         await saveTodoItems(db, initTodos);
         setTodos(initTodos);
@@ -83,8 +83,8 @@ const App = () => {
     try {
       const db = await getDBConnection();
       await deleteTodoItem(db, id);
-      todos.splice(id, 1);
-      setTodos(todos.slice(0));
+      const newTodos = todos.filter(item => item.id !== id);
+      setTodos(newTodos);
     } catch (error) {
       console.error(error);
     }
@@ -108,7 +108,7 @@ const App = () => {
         </View>
         <View style={styles.textInputContainer}>
           <TextInput
-            style={styles.textInput}
+            placeholder="Enter a task to do..."
             value={newTodo}
             onChangeText={text => setNewTodo(text)}
           />
@@ -144,14 +144,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     justifyContent: 'flex-end',
-  },
-
-  textInput: {
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 30,
-    margin: 10,
-    backgroundColor: 'pink',
   },
 });
 
