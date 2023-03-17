@@ -27,19 +27,11 @@ const App = () => {
   const [newTodo, setNewTodo] = useState('');
   const loadDataCallback = useCallback(async () => {
     try {
-      const initTodos = [
-        {id: 0, value: 'go to shop'},
-        {id: 1, value: 'eat at least one healthy meal'},
-        {id: 3, value: 'Do some exercises'},
-      ];
       const db = await getDBConnection();
       await createTable(db);
       const storedTodoItems = await getTodoItems(db);
-      if (storedTodoItems.length) {
+      if (storedTodoItems.length > 0) {
         setTodos(storedTodoItems);
-      } else {
-        await saveTodoItems(db, initTodos);
-        setTodos(initTodos);
       }
     } catch (error) {
       console.error('error');
@@ -98,13 +90,20 @@ const App = () => {
           <Text style={styles.appTitleView}>ToDo Application</Text>
         </View>
         <View>
-          {todos.map(todo => (
-            <ToDoItemComponent
-              key={todo.id}
-              todo={todo}
-              deleteItem={deleteItem}
-            />
-          ))}
+          {todos.length ? (
+            todos.map(todo => (
+              <ToDoItemComponent
+                key={todo.id}
+                todo={todo}
+                deleteItem={deleteItem}
+              />
+            ))
+          ) : (
+            <Text>
+              Nothing to do yet. Add some new tasks and make them done when
+              finished...
+            </Text>
+          )}
         </View>
         <View style={styles.textInputContainer}>
           <TextInput
